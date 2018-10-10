@@ -1,0 +1,46 @@
+*/ estruturação projeto de lógicaa /*
+
+-> a entrada é do tipo Entrada.in,
+N // num de problemas a serem resolvidos
+// N linhas seguintes do tipo
+expressao valoração-verdade
+ou
+{expressão_1, expressão_2, ..., expressão_n} valoração-verdade}
+
+negação ​(~), conjunção ​(&), disjunção ​(v) e
+implicação ​(>)
+
+-> a saída é do tipo Saida.out
+Problema #n
+frase
+PULA LINHA
+Problema #n+1 
+etc
+
+////////////////////////////////////////////////////////////////////////
+
+	METODOS
+ boolean avaliarseexpressaoehlegitima
+	usa definicao indutiva de PROP(<EXPT>)
+ 
+ determinarvalorverdade
+	usa a funçao valoracao verdade, do teorema da extensao homomorfica unica
+	
+
+	MAIN
+Leitura do arquivo .in 
+
+if primeiro formato:
+se a expressao nao for legitima "A palavra nao e legitima."
+se nao:
+ se a valoracao satisfaz a expressao "A valoracao-verdade satisfaz a proposicao."
+ se a valoracao refuta " A valoracao-verdade nao satisfaz a proposicao."
+
+if segundo formato:
+se o conjunto tiver alguma expressao nao legitima (percorre o negocio e checa, como chegou no primeiro formato), "Ha uma palavra nao legitima no conjunto."
+se nao:
+ se a valoracao satisfaz o conjunto "A valoracao-verdade satisfaz o conjunto."
+ se nao satisfaz "A valoracao-verdade nao satisfaz o conjunto."
+
+ 
+
