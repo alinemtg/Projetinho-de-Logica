@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Main {
 
-    static Map<Character, Boolean> fazerCorrespondencia(Map<Character, Boolean> valoracao, String expressao, String[] valores) {
+    static Map<Character, Boolean> fazerCorrespondencia (Map<Character, Boolean> valoracao, String expressao, String[] valores) {
         int indiceValor = 0;
         for (int i=0; i < expressao.length(); i++) {
             if (!(valoracao.containsKey(expressao.charAt(i))) && expressao.charAt(i) >= 'A' && expressao.charAt(i) <= 'Z') {
@@ -18,14 +18,12 @@ public class Main {
                     valoracao.put(expressao.charAt(i), true);
                 }
                 indiceValor++;
-
-
             }
         }
         return valoracao;
     }
 
-    static boolean satisfaz(Map<Character, Boolean> valoresVerdade, String expressao) {
+    static boolean satisfaz (Map<Character, Boolean> valoresVerdade, String expressao) {
 
         if (expressao.length() == 1) {
             return valoresVerdade.get(expressao.charAt(0));
@@ -33,7 +31,12 @@ public class Main {
 
         int inicio = 0;
         int finale = expressao.length() - 1;
-        int posOperador = acharPosOperador(expressao);
+        int posOperador = -1;
+        if (expressao.charAt(1) == '~'){
+            posOperador = 1;
+        }else{
+            posOperador = acharPosOperador(expressao);
+        }
 
         switch (expressao.charAt(posOperador)) {
             case '~':
@@ -56,7 +59,7 @@ public class Main {
         }
     }
 
-    static boolean ehLegitima(String expressao) {
+    static boolean ehLegitima (String expressao) {
 
         if (expressao.length() == 1 && expressao.charAt(0) >= 'A' && expressao.charAt(0) <= 'Z')
             return true;
@@ -77,7 +80,7 @@ public class Main {
         return false;
     }
 
-    static boolean temVariavelSeguida(String expressao) {
+    static boolean temVariavelSeguida (String expressao) {
         int numVarSeguidas = 0;
 
         for (int i = 0; i < expressao.length(); i++) {
@@ -93,7 +96,7 @@ public class Main {
         return false;
     }
 
-    static int acharPosOperador(String expressao) {
+    static int acharPosOperador (String expressao) {
         int numPar = 0;
 
         for (int i = 0; i < expressao.length(); i++) {
@@ -109,6 +112,7 @@ public class Main {
         return -1;
 
     }
+
 
     public static void main(String[] args) throws IOException {
 
@@ -129,7 +133,7 @@ public class Main {
 
             printarSaida.println("Problema #" + i);
 
-            int indexAux = 0;
+            int indexAux = -1;
             for (int c = 0; c < linha.length(); c++) {
                 if (linha.charAt(c) == '1' || linha.charAt(c) == '0') {
                     indexAux = c;
@@ -137,7 +141,7 @@ public class Main {
                 }
             }
 
-            String part1 = linha.substring(0, indexAux);
+            String part1 = linha.substring(0, indexAux-1);
             System.out.println(part1);
             String part2 = linha.substring(indexAux);
             String valores[] = part2.split(" ");
@@ -146,7 +150,7 @@ public class Main {
             Map<Character, Boolean> valoracao = fazerCorrespondencia(valoracaoAnt, part1, valores);
 
             // ~~~~ CASO SEJA UMA EXPRESSAO ISOLADA
-            if (!(part1.charAt(0) == '{')) {
+            if (!(part1.contains("{"))) {
                 System.out.println("eh sem chaves");
 
                 if (!temVariavelSeguida(part1)) {
@@ -167,16 +171,26 @@ public class Main {
 
             // ~~~~ CASO SEJA UM CONJUNTO DE EXPRESSOES
             else {
-                part1 = part1.substring(1, part1.length() - 2);
+                part1 = part1.substring(1, part1.length() - 1);
                 System.out.println(part1);
-                String expressoes[] = part1.split(", ");
+
+                String expressoes[] = new String[1];
+                if (part1.contains(", ")){
+                    expressoes = part1.split(", ");
+                }else{
+                    expressoes[0] = part1;
+                }
 
                 // CHECA SE TODAS AS EXPRESSOES SAO LEGITIMAS
                 boolean todasLegitimas = true;
-                for (String expressoe : expressoes) {
-                    if (temVariavelSeguida(expressoe) && !(ehLegitima(expressoe))) {
+
+                for (String exp : expressoes) {
+                    System.out.println(exp);
+                    if (!(ehLegitima(exp)) || temVariavelSeguida(exp)) {
                         todasLegitimas = false;
                         break;
+                    }else{
+                        System.out.println("eh legitima");
                     }
                 }
 
@@ -184,8 +198,9 @@ public class Main {
                     boolean conjuntoSatisfativel = true;
 
                     // CHECA SE CADA EXPRESSAO É SATISFATIVEL
-                    for (String expressoe : expressoes) {
-                        if (!(satisfaz(valoracao, expressoe))) {
+                    for (String exp : expressoes) {
+                        if (!(satisfaz(valoracao, exp))) {
+                            System.out.println(exp + " satisfativel check");
                             conjuntoSatisfativel = false;
                             break;
                         }
